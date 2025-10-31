@@ -19,20 +19,20 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="bg-white py-16 border-t border-gray-100">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="bg-white py-12 md:py-16 border-t border-gray-100">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
          
           <div className="text-center lg:text-left">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Stay in Style
             </h2>
-            <p className="text-gray-600 mb-8 text-lg">
+            <p className="text-gray-600 mb-6 md:mb-8 text-base md:text-lg">
               Subscribe to our newsletter and be the first to know about new arrivals, exclusive offers, and jewelry trends.
             </p>
 
             <form onSubmit={handleSubmit} className="max-w-md mx-auto lg:mx-0">
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <input
                   type="email"
                   value={email}
@@ -43,7 +43,7 @@ export default function Newsletter() {
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-[#00a0b0] text-white font-semibold rounded-lg hover:bg-[#008a9e] transition-colors"
+                  className="px-6 py-3 bg-[#00a0b0] text-white font-semibold rounded-lg hover:bg-[#008a9e] transition-colors whitespace-nowrap"
                 >
                   Subscribe
                 </button>
@@ -57,7 +57,7 @@ export default function Newsletter() {
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-[#00a0b0]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Heart className="w-8 h-8 text-[#00a0b0]" />

@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Engagement() {
   return (
     <section className="py-20 bg-white text-gray-800">
-      <div className="container mx-auto px-6 md:px-16 grid md:grid-cols-2 gap-16 items-center">
+      <div className="container mx-auto px-6 md:px-16 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
         
        
         <div className="space-y-4 text-center md:text-left">
@@ -22,9 +22,9 @@ export default function Engagement() {
         </div>
 
         
-        <div className="relative flex justify-center md:justify-end w-full gap-6">
+        <div className="relative flex flex-col md:flex-row justify-center md:justify-end w-full gap-6">
          
-          <div className="relative w-72 h-[420px] rounded-2xl overflow-hidden shadow-lg -translate-y-6">
+          <div className="relative w-72 md:w-80 h-[420px] rounded-2xl overflow-hidden shadow-lg -translate-y-6">
             <Image
               src="https://res.cloudinary.com/dpahyb1x9/image/upload/v1761897094/engage1_oesc7j.jpg"
               alt="Gold Jewelry"
@@ -33,8 +33,8 @@ export default function Engagement() {
             />
           </div>
 
-          
-          <div className="relative w-72 h-[380px] rounded-2xl overflow-hidden shadow-xl translate-y-6">
+
+          <div className="relative w-72 md:w-80 h-[380px] rounded-2xl overflow-hidden shadow-xl translate-y-6">
             <Image
               src="https://res.cloudinary.com/dpahyb1x9/image/upload/v1761897094/engage2_akpv4y.jpg"
               alt="Engagement Ring"

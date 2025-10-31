@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface IEarring extends Document {
+export interface IEngagement extends Document {
   title: string;
   description: string;
   price: number;
@@ -9,7 +9,7 @@ export interface IEarring extends Document {
   updatedAt: Date;
 }
 
-const EarringSchema: Schema = new Schema(
+const EngagementSchema: Schema = new Schema(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
@@ -21,4 +21,4 @@ const EarringSchema: Schema = new Schema(
   }
 );
 
-export default mongoose.models.Earring || mongoose.model<IEarring>("Earring", EarringSchema);
+export default mongoose.models.Engagement || mongoose.model<IEngagement>("Engagement", EngagementSchema);

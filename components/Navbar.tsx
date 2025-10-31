@@ -28,7 +28,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 border-b backdrop-blur-2xl transition-all duration-500 border-white/20 ${isHomePage ? 'bg-white/10' : 'bg-[#00a0b0]/90'}`}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-20">
-        {/* Logo */}
+       
         <Link
           href="/"
           className="text-2xl font-light tracking-[0.25em] text-white drop-shadow-[0_0_8px_rgba(212,175,55,0.25)]"
@@ -36,7 +36,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
           CHARLOTTE<span className="text-[#0096a6]">•</span>FACET
         </Link>
 
-        {/* Desktop Menu */}
+      
         <div className="hidden md:flex items-center space-x-12">
           {navLinks.map((link) => (
             link.name === "Collections" ? (
@@ -54,45 +54,52 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                   <span className="absolute left-0 -bottom-1 w-0 bg-[#00a0b0] group-hover:w-full transition-all duration-500 "></span>
                 </Link>
 
-                {/* Collections Dropdown */}
+               
                 {isCollectionsOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-4 px-6 z-50">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Shop by Category</h3>
-                    <div className="space-y-3">
+                  <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 py-6 px-6 z-50">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">Shop by Category</h3>
+                    <div className="grid grid-cols-2 gap-4">
                       <Link
                         href="/collections/earring"
-                        className="block text-gray-700 hover:text-[#00a0b0] transition-colors"
+                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Earrings
                       </Link>
                       <Link
                         href="/collections/necklace"
-                        className="block text-gray-700 hover:text-[#00a0b0] transition-colors"
+                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Necklaces
                       </Link>
                       <Link
                         href="/collections/watch"
-                        className="block text-gray-700 hover:text-[#00a0b0] transition-colors"
+                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Watches
                       </Link>
                       <Link
                         href="/collections/nosering"
-                        className="block text-gray-700 hover:text-[#00a0b0] transition-colors"
+                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Nose Rings
                       </Link>
                       <Link
                         href="/collections/bracelet"
-                        className="block text-gray-700 hover:text-[#00a0b0] transition-colors"
+                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Bracelets
+                      </Link>
+                      <Link
+                        href="/collections/engagement"
+                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        onClick={() => setIsCollectionsOpen(false)}
+                      >
+                        Engagements
                       </Link>
                     </div>
                   </div>

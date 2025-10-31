@@ -11,6 +11,7 @@ import NoseringModel from "@/models/nosering";
 import WatchModel from "@/models/watch";
 import NewArrivalModel from "@/models/NewArrival";
 import ForGiftsModel from "@/models/ForGifts";
+import EngagementModel from "@/models/engagement";
 
 const productModels = [
   RingModel,
@@ -21,6 +22,7 @@ const productModels = [
   WatchModel,
   NewArrivalModel,
   ForGiftsModel,
+  EngagementModel,
 ];
 
 export async function GET(req: NextRequest) {
@@ -67,6 +69,73 @@ export async function GET(req: NextRequest) {
         imageUrl: product.imageUrl,
         description: product.description,
       }))
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: (error as Error).message },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    // Check admin authentication
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7);
+    const user = await getUserFromToken(token);
+
+    if (!user || user.role !== "admin") {
+      return NextResponse.json(
+        { success: false, error: "Admin access required" },
+        { status: 403 }
+      );
+    }
+
+    await connect();
+
+    // Get product ID from query parameter
+    const url = new URL(req.url);
+    const productId = url.searchParams.get('productId');
+
+    if (!productId) {
+      return NextResponse.json(
+        { success: false, error: "Product ID required" },
+        { status: 400 }
+      );
+    }
+
+    // Try to delete from each model
+    let deleted = false;
+    for (const Model of productModels) {
+      try {
+        const result = await Model.findByIdAndDelete(productId);
+        if (result) {
+          deleted = true;
+          break;
+        }
+      } catch (error) {
+        console.error(`Error deleting from ${Model.modelName}:`, error);
+      }
+    }
+
+    if (!deleted) {
+      return NextResponse.json(
+        { success: false, error: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Product deleted successfully"
     });
   } catch (error) {
     return NextResponse.json(

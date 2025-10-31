@@ -32,14 +32,20 @@ export default function SignInPage() {
         return;
       }
 
-      // Save token to localStorage
+      
       localStorage.setItem("token", data.data.token);
 
-      // Redirect based on role
+      
       if (data.data.user.role === "admin") {
         router.push("/admin/dashboard");
       } else {
-        router.push("/");
+        const intendedPath = sessionStorage.getItem("intendedPath");
+        if (intendedPath) {
+          sessionStorage.removeItem("intendedPath");
+          router.push(intendedPath);
+        } else {
+          router.push("/");
+        }
       }
     } catch (err) {
       setError("Something went wrong. Try again.");
@@ -90,6 +96,13 @@ export default function SignInPage() {
         >
           {loading ? "Signing in..." : "Sign In"}
         </button>
+
+        <p className="text-center mt-4 text-sm text-gray-600">
+          Dont have an account?{" "}
+          <a href="/signUp" className="text-blue-600 hover:text-blue-800">
+            Sign Up
+          </a>
+        </p>
       </form>
     </div>
   );

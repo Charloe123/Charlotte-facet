@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import NewArrival from "@/components/NewArrival";
 import ForGifts from "@/components/ForGifts";
+import Engagement from "@/components/Engagement";
 import BestSellers from "@/components/BestSellers";
-
-
+import Newsletter from "@/components/Newsletter";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -17,12 +17,13 @@ export default function Home() {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-      // Decode token to get user role
+
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         setUserRole(payload.role);
-        // Redirect admin to dashboard
-        if (payload.role === "admin") {
+
+        // Only redirect admin if they're not already on the admin dashboard
+        if (payload.role === "admin" && !window.location.pathname.startsWith("/admin")) {
           window.location.href = "/admin/dashboard";
         }
       } catch (error) {
@@ -40,12 +41,12 @@ export default function Home() {
 
   return (
     <>
-      {/* Glass Navbar */}
+   
       <Navbar isLoggedIn={isLoggedIn} role={userRole} onLogout={handleLogout} />
 
-      {/* Banner Section */}
+   
       <section className="relative w-full h-screen overflow-hidden">
-        {/* Video */}
+      
         <motion.video
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -58,10 +59,10 @@ export default function Home() {
           src="https://res.cloudinary.com/dpahyb1x9/video/upload/v1761211890/knot_title_online-video-cutter.com_kj0r8z.mp4"
         />
 
-        {/* Overlay */}
+       
         <div className="absolute inset-0 bg-black/40"></div>
 
-        {/* Banner Content */}
+       
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
           <motion.h1
             initial={{ opacity: 0 }}
@@ -91,9 +92,9 @@ export default function Home() {
             Explore our exquisite collection of handcrafted jewelry
           </motion.p>
 
-          {/* Shop Now Button */}
+        
           <motion.a
-            href="#products"
+            href="/shop"
             className="relative mt-8 px-8 py-3 border border-white/70 text-white hover:bg-[#0ABAB5] hover:border-[#0ABAB5] transition-all duration-300 rounded-full tracking-wide overflow-hidden"
           >
             Shop Now
@@ -111,14 +112,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* New Arrivals / Rest of Page */}
+      <Engagement/>
       <div id="products" className="min-h-screen">
         <NewArrival/>
         <ForGifts/>
         <BestSellers/>
+        <Newsletter/>
       </div>
 
-      {/* Footer */}
+   
       
     </>
   );

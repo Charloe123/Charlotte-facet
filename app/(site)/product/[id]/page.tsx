@@ -20,13 +20,12 @@ export default function ProductPage() {
   const id = params.id as string;
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [, setClientSecret] = useState("");
   const [showCheckout, setShowCheckout] = useState(false);
 
   useEffect(() => {
     async function fetchProduct() {
       try {
-        // Try different product collections
+       
         const collections = ['NewArrival', 'forgifts', 'bestsellers', 'bracelet', 'earring', 'necklace', 'nosering', 'ring', 'watch'];
 
         for (const collection of collections) {
@@ -35,7 +34,7 @@ export default function ProductPage() {
             if (res.ok) {
               const data = await res.json();
               if (data.success && data.data) {
-                // If it's an array, find the product by ID
+               
                 if (Array.isArray(data.data)) {
                   const product = data.data.find((p: Product) => p._id === id);
                   if (product) {
@@ -43,18 +42,17 @@ export default function ProductPage() {
                     return;
                   }
                 } else {
-                  // If it's a single product object
+                 
                   setProduct(data.data);
                   return;
                 }
               }
             }
-          } catch (error) {
-            // Continue to next collection
+          } catch {
+           
           }
         }
 
-        // If no product found in any collection
         throw new Error("Product not found");
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -68,32 +66,6 @@ export default function ProductPage() {
     }
   }, [id]);
 
-  const handlePurchase = async () => {
-    if (!product) return;
-
-    try {
-      const res = await fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: product.price,
-          productId: product._id,
-        }),
-      });
-
-      const data = await res.json();
-      if (data.clientSecret) {
-        setClientSecret(data.clientSecret);
-        // For PayPal, we'll use Stripe Elements
-        // This is a simplified implementation
-        alert("Payment initiated. In a real app, this would redirect to PayPal.");
-      }
-    } catch (error) {
-      console.error("Error creating payment intent:", error);
-    }
-  };
 
   if (loading) {
     return (
@@ -117,7 +89,7 @@ export default function ProductPage() {
         <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
           <div className="md:flex">
             <div className="md:w-1/2">
-              <div className="relative h-[32rem] md:h-full">
+              <div className="relative h-128 md:h-full">
                 <Image
                   src={product.imageUrl}
                   alt={product.title || "Product image"}

@@ -5,7 +5,7 @@ import OrderModel from "@/models/Order";
 
 export async function GET(req: NextRequest) {
   try {
-    // Check admin authentication
+    
     const authHeader = req.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json(
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     await connect();
 
-    // Fetch all orders with user information
+   
     const orders = await OrderModel.find()
       .populate('userId', 'name email')
       .sort({ createdAt: -1 });
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    // Check admin authentication
+   
     const authHeader = req.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json(

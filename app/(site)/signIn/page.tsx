@@ -24,6 +24,12 @@ export default function SignInPage() {
         body: JSON.stringify({ email, password }),
       });
 
+      if (!res.ok) {
+        setError("Sign in failed");
+        setLoading(false);
+        return;
+      }
+
       const data = await res.json();
 
       if (!data.success) {

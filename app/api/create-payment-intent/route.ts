@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Mock payment intent creation for build
+   
     const mockPaymentIntent = {
       client_secret: "mock_client_secret_" + Date.now(),
       id: "mock_pi_" + Date.now(),

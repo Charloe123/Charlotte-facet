@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if user already exists
+   
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
@@ -24,15 +24,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate role
+   
     const validRoles = ["customer", "admin"];
     const adminEmail = process.env.ADMIN_EMAIL;
     const userRole = email === adminEmail ? "admin" : (role && validRoles.includes(role) ? role : "customer");
 
-    // Hash password
+    
     const hashedPassword = await hashPassword(password);
 
-    // Create user
+  
     const user = new User({
       name,
       email,
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     await user.save();
 
-    // Generate token
+    
     const token = generateToken({
       id: user._id.toString(),
       name: user.name,

@@ -98,14 +98,14 @@ export default function SignInPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          className="w-full bg-[#D4AF37] text-white py-2 rounded hover:bg-[#B8860B] transition"
         >
           {loading ? "Signing in..." : "Sign In"}
         </button>
 
         <p className="text-center mt-4 text-sm text-gray-600">
           Dont have an account?{" "}
-          <a href="/signUp" className="text-blue-600 hover:text-blue-800">
+          <a href="/signUp" className="text-[#D4AF37] hover:text-[#B8860B]">
             Sign Up
           </a>
         </p>

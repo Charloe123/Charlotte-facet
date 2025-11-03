@@ -101,7 +101,7 @@ export default function ProductPage() {
             <div className="md:w-1/2 p-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.title}</h1>
               <p className="text-gray-600 mb-6 leading-relaxed">{product.description}</p>
-              <div className="text-3xl font-bold text-[#00a0b0] mb-6">${product.price}</div>
+              <div className="text-3xl font-bold text-[#D4AF37] mb-6">${product.price}</div>
               <p className="text-sm text-gray-500 mb-8">Category: <span className="font-medium">{product.category}</span></p>
 
               <button

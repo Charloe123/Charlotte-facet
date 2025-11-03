@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 
 interface Earring {
@@ -18,7 +18,6 @@ interface Earring {
 export default function EarringPage() {
   const [earrings, setEarrings] = useState<Earring[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     const fetchEarrings = async () => {
@@ -54,31 +53,28 @@ export default function EarringPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {earrings.map((earring) => (
-          <div
+          <Link
             key={earring._id}
-            className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-500 border border-gray-100 cursor-pointer group"
-            onClick={() => router.push(`/products/${earring._id}`)}
+            href={`/product/${earring._id}`}
+            className="block bg-gray-100 rounded-lg shadow hover:shadow-md transition overflow-hidden h-80"
           >
-            <div className="relative w-full h-64 mb-4 overflow-hidden rounded-xl">
-              <Image
-                src={earring.imageUrl}
-                alt={`${earring.title} - ${earring.description?.substring(0, 50) || 'Stylish earring'}...`}
-                width={400}
-                height={400}
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-              />
-              <div className="absolute inset-0  from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="flex flex-col items-center p-4 h-full">
+              <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                <Image
+                  src={earring.imageUrl}
+                  alt={earring.title || "Product image"}
+                  fill
+                  className="object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <h3 className="mt-2 text-lg font-semibold text-center">{earring.title}</h3>
+              <p className="mt-1 text-sm text-gray-600 text-center line-clamp-2">{earring.description}</p>
+              <p className="mt-2 font-bold text-[#D4AF37]">${earring.price}</p>
+              <button className="mt-3 px-4 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8860B] transition-colors text-sm font-medium">
+                Shop Now
+              </button>
             </div>
-            <h2 className="font-bold text-xl text-center text-[#2C2C2C] mb-2 tracking-wide">
-              {earring.title}
-            </h2>
-            <p className="text-black text-base text-center mb-3 line-clamp-2 font-semibold">
-              {earring.description}
-            </p>
-            <div className="w-16 h-1 bg-[#D4AF37] rounded-full mb-3"></div>
-            <p className="text-[#D4AF37] font-bold text-2xl mt-2 tracking-wider">${earring.price}</p>
-            <div className="mt-4 w-full h-px  from-transparent via-[#D4AF37]/30 to-transparent"></div>
-          </div>
+          </Link>
         ))}
       </div>
     </main>

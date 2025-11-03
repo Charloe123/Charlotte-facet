@@ -58,7 +58,7 @@ export default function NewArrival() {
                 <p className="text-xs line-clamp-2">
                   {product.description}
                 </p>
-                <p className="mt-1 text-sm font-bold text-[#00a0b0]">
+                <p className="mt-1 text-sm font-bold text-[#D4AF37]">
                   ${product.price}
                 </p>
               </div>

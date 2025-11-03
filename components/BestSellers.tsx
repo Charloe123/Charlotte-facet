@@ -65,8 +65,8 @@ export default function BestSellers() {
                 </div>
                 <h3 className="mt-2 text-lg font-semibold text-center">{product.title}</h3>
                 <p className="mt-1 text-sm text-gray-600 text-center line-clamp-2">{product.description}</p>
-                <p className="mt-2 font-bold text-[#00a0b0]">${product.price}</p>
-                <button className="mt-3 px-4 py-2 bg-[#00a0b0] text-white rounded-lg hover:bg-[#008a9e] transition-colors text-sm font-medium">
+                <p className="mt-2 font-bold text-[#D4AF37]">${product.price}</p>
+                <button className="mt-3 px-4 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8860B] transition-colors text-sm font-medium">
                   Shop Now
                 </button>
               </div>

@@ -61,42 +61,42 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                     <div className="grid grid-cols-2 gap-4">
                       <Link
                         href="/collections/earring"
-                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        className="bg-[#D4AF37] text-white py-3 px-4 rounded-lg hover:bg-[#B8860B] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Earrings
                       </Link>
                       <Link
                         href="/collections/necklace"
-                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        className="bg-[#D4AF37] text-white py-3 px-4 rounded-lg hover:bg-[#B8860B] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Necklaces
                       </Link>
                       <Link
                         href="/collections/watch"
-                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        className="bg-[#D4AF37] text-white py-3 px-4 rounded-lg hover:bg-[#B8860B] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Watches
                       </Link>
                       <Link
                         href="/collections/nosering"
-                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        className="bg-[#D4AF37] text-white py-3 px-4 rounded-lg hover:bg-[#B8860B] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Nose Rings
                       </Link>
                       <Link
                         href="/collections/bracelet"
-                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        className="bg-[#D4AF37] text-white py-3 px-4 rounded-lg hover:bg-[#B8860B] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Bracelets
                       </Link>
                       <Link
                         href="/collections/engagement"
-                        className="bg-linear-to-r from-[#00a0b0] to-[#008a9e] text-white py-3 px-4 rounded-lg hover:from-[#008a9e] hover:to-[#007a8e] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        className="bg-[#D4AF37] text-white py-3 px-4 rounded-lg hover:bg-[#B8860B] transition-all duration-300 text-center font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         onClick={() => setIsCollectionsOpen(false)}
                       >
                         Engagements
@@ -112,7 +112,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                 className={`uppercase text-[13px] tracking-[0.25em] transition-all duration-300 relative group ${isHomePage ? 'text-white hover:text-white' : 'text-white hover:text-white'}`}
               >
                 {link.name}
-                <span className="absolute left-0 -bottom-1 w-0 bg-[#00a0b0] group-hover:w-full transition-all duration-500 "></span>
+                <span className="absolute left-0 -bottom-1 w-0 bg-[#D4AF37] group-hover:w-full transition-all duration-500 "></span>
               </Link>
             )
           ))}
@@ -121,7 +121,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
             <div className="flex items-center gap-4">
               <Link
                 href="/profile"
-                className="flex items-center gap-2 text-white/80 hover:text-[#00a0b0] transition"
+                className="flex items-center gap-2 text-white/80 hover:text-[#D4AF37] transition"
               >
                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
                   U
@@ -131,7 +131,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
               {role === "admin" && (
                 <Link
                   href="/admin/dashboard"
-                  className="text-white/80 hover:text-[#00a0b0] transition"
+                  className="text-white/80 hover:text-[#D4AF37] transition"
                 >
                   Admin
                 </Link>
@@ -147,7 +147,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
             <div className="flex items-center gap-6">
               <Link
                 href="/signIn"
-                className="flex items-center gap-2 text-white/80 hover:text-[#00a0b0] transition"
+                className="flex items-center gap-2 text-white/80 hover:text-[#D4AF37] transition"
               >
                 <User size={18} />
                 <span className="text-sm tracking-wider uppercase">Sign In</span>
@@ -156,7 +156,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
               {/* Shopping Bag Icon */}
               <Link
                 href="/cart"
-                className="text-white hover:text-[#00a0b0] transition"
+                className="text-white hover:text-[#D4AF37] transition"
               >
                 <ShoppingBag size={20} />
               </Link>
@@ -179,7 +179,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="uppercase text-sm tracking-widest hover:text-[#00a0b0] transition"
+                className="uppercase text-sm tracking-widest hover:text-[#D4AF37] transition"
               >
                 {link.name}
               </Link>
@@ -191,7 +191,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
               <div className="flex items-center gap-6 pt-4">
                 <Link
                   href="/profile"
-                  className="flex items-center gap-2 text-white/80 hover:text-[#00a0b0]"
+                  className="flex items-center gap-2 text-white/80 hover:text-[#D4AF37]"
                 >
                   <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
                     U
@@ -201,7 +201,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                 {role === "admin" && (
                   <Link
                     href="/admin/dashboard"
-                    className="text-white/80 hover:text-[#00a0b0]"
+                    className="text-white/80 hover:text-[#D4AF37]"
                   >
                     Admin
                   </Link>
@@ -216,7 +216,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
             ) : (
               <Link
                 href="/signIn"
-                className="flex items-center gap-2 text-white/80 hover:text-[#00a0b0]"
+                className="flex items-center gap-2 text-white/80 hover:text-[#D4AF37]"
               >
                 <User size={18} />
                 <span className="text-sm uppercase">Sign In / Sign Up</span>

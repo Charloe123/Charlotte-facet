@@ -25,7 +25,7 @@ export default function CategoryMenu() {
       {/* Main link */}
       <Link
         href="/collections"
-        className="flex items-center gap-1 text-white/80 hover:text-[#00a0b0] uppercase tracking-widest transition-all"
+        className="flex items-center gap-1 text-white/80 hover:text-[#D4AF37] uppercase tracking-widest transition-all"
       >
         Collections
         <ChevronDown
@@ -41,7 +41,7 @@ export default function CategoryMenu() {
             <Link
               key={cat.name}
               href={cat.href}
-              className="block px-4 py-2 text-gray-800 hover:bg-[#00a0b0]/10 hover:text-[#00a0b0] transition-all"
+              className="block px-4 py-2 text-gray-800 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] transition-all"
               onClick={() => setOpen(false)}
             >
               {cat.name}

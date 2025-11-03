@@ -58,7 +58,7 @@ export default function ForGifts() {
               </div>
               <div className="p-4 text-center">
                 <h3 className="text-base font-medium mb-2">{product.title}</h3>
-                <p className="text-xl font-bold text-[#00a0b0]">${product.price}</p>
+                <p className="text-xl font-bold text-[#D4AF37]">${product.price}</p>
               </div>
             </Link>
           ))}

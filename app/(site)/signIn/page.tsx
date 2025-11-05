@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
@@ -16,33 +17,21 @@ export default function SignInPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
 
-      if (!res.ok) {
-        setError("Sign in failed");
+      if (result?.error) {
+        setError("Invalid credentials");
         setLoading(false);
         return;
       }
 
-      const data = await res.json();
-
-      if (!data.success) {
-        setError(data.error || "Sign in failed");
-        setLoading(false);
-        return;
-      }
-
-      
-      localStorage.setItem("token", data.data.token);
-
-      
-      if (data.data.user.role === "admin") {
+      // Get the session to check user role
+      const session = await getSession();
+      if ((session?.user as { role: string })?.role === "admin") {
         router.push("/admin/dashboard");
       } else {
         const intendedPath = sessionStorage.getItem("intendedPath");

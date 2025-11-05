@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 interface User {
@@ -55,36 +55,22 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"users" | "products" | "orders">("users");
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/signIn");
-      return;
-    }
+    if (status === "loading") return;
 
-    try {
-      // Decode token
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      if (payload.role !== "admin") {
-        router.push("/"); // Non-admins go to homepage
-        return;
-      }
-    } catch (error) {
-      console.error("Invalid token:", error);
-      localStorage.removeItem("token");
-      router.push("/signIn");
+    if (status === "unauthenticated" || (session?.user as { role: string })?.role !== "admin") {
+      router.push("/");
       return;
     }
 
     fetchData();
-  }, [router]);
+  }, [session, status, router]);
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem("token");
       const headers = {
-        "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",
       };
 
@@ -115,13 +101,12 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/");
-  };
+  // const handleLogout = () => {
+  //   router.push("/");
+  // };
 
   const handleEditUser = (user: User) => {
-    // TODO: Implement edit user functionality
+   
     alert(`Edit user: ${user.name}`);
   };
 
@@ -129,12 +114,8 @@ export default function AdminDashboard() {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`/api/admin/users?userId=${userId}`, {
         method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
       });
 
       if (response.ok) {
@@ -151,7 +132,7 @@ export default function AdminDashboard() {
   };
 
   const handleEditProduct = (product: Product) => {
-    // TODO: Implement edit product functionality
+ 
     alert(`Edit product: ${product.title}`);
   };
 
@@ -159,12 +140,8 @@ export default function AdminDashboard() {
     if (!confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`/api/admin/products?productId=${productId}`, {
         method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
       });
 
       if (response.ok) {
@@ -182,11 +159,9 @@ export default function AdminDashboard() {
 
   const handleUpdateOrderStatus = async (orderId: string, status: Order['status']) => {
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch("/api/admin/orders", {
         method: "PUT",
         headers: {
-          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ orderId, status }),
@@ -209,7 +184,7 @@ export default function AdminDashboard() {
   };
 
   const handleViewOrderDetails = (order: Order) => {
-    // TODO: Implement order details modal or page
+   
     alert(`Order Details:\nCustomer: ${order.userId.name}\nItems: ${order.items.length}\nTotal: $${order.total}\nStatus: ${order.status}`);
   };
 
@@ -223,14 +198,13 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <Navbar isLoggedIn={true} role="admin" onLogout={handleLogout} />
 
       <div className="min-h-screen bg-gray-50 pt-20 md:pt-24">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-12">
           <div className="bg-white rounded-lg shadow-lg p-4 md:p-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
 
-            {/* Tabs */}
+        
             <div className="flex flex-wrap gap-2 mb-8">
               <button
                 onClick={() => setActiveTab("users")}
@@ -264,7 +238,7 @@ export default function AdminDashboard() {
               </button>
             </div>
 
-            {/* Users Tab */}
+           
             {activeTab === "users" && (
               <div>
                 <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-6">User Management</h2>
@@ -320,7 +294,6 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {/* Products Tab */}
             {activeTab === "products" && (
               <div>
                 <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-6">Product Management</h2>
@@ -329,7 +302,7 @@ export default function AdminDashboard() {
                     <div key={product._id} className="bg-gray-50 rounded-lg p-3 md:p-4 border">
                       <Image
                         src={product.imageUrl}
-                        alt={product.title}
+                        alt={`Image of ${product.title}`}
                         width={400}
                         height={200}
                         className="w-full h-32 md:h-48 object-cover rounded-md mb-4"
@@ -357,7 +330,7 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {/* Orders Tab */}
+         
             {activeTab === "orders" && (
               <div>
                 <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-6">Order Management</h2>

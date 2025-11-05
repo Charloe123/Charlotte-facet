@@ -1,8 +1,9 @@
-// app/(site)/shop/page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 
@@ -20,35 +21,22 @@ interface Product {
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const router = useRouter();
+  const { status } = useSession();
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        // Store intended path for redirect after login
-        sessionStorage.setItem("intendedPath", "/shop");
-        router.push("/signIn");
-        return;
-      }
+    if (status === "loading") return;
 
-      try {
-        JSON.parse(atob(token.split('.')[1]));
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error("Error decoding token:", error);
-        sessionStorage.setItem("intendedPath", "/shop");
-        router.push("/signIn");
-        return;
-      }
-    };
-
-    checkAuth();
-  }, [router]);
+    if (status === "unauthenticated") {
+      
+      sessionStorage.setItem("intendedPath", "/shop");
+      router.push("/signIn");
+      return;
+    }
+  }, [status, router]);
 
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (status !== "authenticated") return;
 
     const fetchProducts = async () => {
       try {
@@ -82,7 +70,6 @@ export default function ShopPage() {
           ...(engagementData.success ? engagementData.data : [])
         ];
 
-        // Remove duplicates based on _id
         const uniqueProducts = allProducts.filter((product, index, self) =>
           index === self.findIndex(p => p._id === product._id)
         );
@@ -97,7 +84,7 @@ export default function ShopPage() {
     };
 
     fetchProducts();
-  }, [isLoggedIn]);
+  }, [status]);
 
   if (loading) {
     return (
@@ -113,32 +100,32 @@ export default function ShopPage() {
         All Products
       </h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         {products.map((product) => (
           <div
             key={product._id}
-            className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-500 border border-gray-100 cursor-pointer group"
+            className="bg-gray-100 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer group"
             onClick={() => router.push(`/product/${product._id}`)}
           >
-            <div className="relative w-full h-64 mb-4 overflow-hidden rounded-xl">
+            <div className="relative w-full h-48">
               <Image
                 src={product.imageUrl}
-                alt={`${product.title} - ${product.description?.substring(0, 50) || 'Stylish product'}...`}
-                width={400}
-                height={400}
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                alt={`${product.title} - ${product.description?.substring(0, 50) || 'Stylish jewelry product'}...`}
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0  from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
             </div>
-            <h2 className="font-bold text-xl text-center text-[#2C2C2C] mb-2 tracking-wide">
-              {product.title}
-            </h2>
-            <p className="text-black text-base text-center mb-3 line-clamp-2 font-semibold">
-              {product.description}
-            </p>
-            <div className="w-16 h-1 bg-[#D4AF37] rounded-full mb-3"></div>
-            <p className="text-[#D4AF37] font-bold text-2xl mt-2 tracking-wider">${product.price}</p>
-            <div className="mt-4 w-full h-px  from-transparent via-[#D4AF37]/30 to-transparent"></div>
+            <div className="p-3 text-center">
+              <h3 className="text-sm font-semibold text-gray-800 truncate">
+                {product.title}
+              </h3>
+              <p className="text-xs line-clamp-2">
+                {product.description}
+              </p>
+              <p className="mt-1 text-sm font-bold text-[#D4AF37]">
+                ${product.price}
+              </p>
+            </div>
           </div>
         ))}
       </div>

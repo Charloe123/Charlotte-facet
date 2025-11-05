@@ -6,7 +6,7 @@ if (!MONGODB_URI) {
   throw new Error(" Please define MONGODB_URI in your .env.local file");
 }
 
-// Extend global type to include a cached mongoose connection
+
 declare global {
   
   var mongooseCache: {
@@ -26,7 +26,7 @@ async function connect() {
 
   if (!global.mongooseCache.promise) {
     global.mongooseCache.promise = mongoose.connect(MONGODB_URI, {
-      dbName: "charlotte-facet", // Change to your DB name if needed
+      dbName: "charlotte-facet", 
     });
   }
 

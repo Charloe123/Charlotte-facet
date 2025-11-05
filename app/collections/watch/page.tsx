@@ -1,9 +1,9 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useCart } from "@/lib/cart-context";
 
 interface Watch {
   _id: string;
@@ -18,6 +18,7 @@ interface Watch {
 export default function WatchPage() {
   const [watches, setWatches] = useState<Watch[]>([]);
   const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchWatches = async () => {
@@ -60,19 +61,48 @@ export default function WatchPage() {
           >
             <div className="flex flex-col items-center p-4 h-full">
               <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                <Image
-                  src={watch.imageUrl}
-                  alt={watch.title || "Product image"}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-500"
-                />
+                {watch.imageUrl && (
+                  <Image
+                    src={watch.imageUrl}
+                    alt={watch.title || "Product image"}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                )}
               </div>
-              <h3 className="mt-2 text-lg font-semibold text-center">{watch.title}</h3>
-              <p className="mt-1 text-sm text-gray-600 text-center line-clamp-2">{watch.description}</p>
+              <h3 className="mt-2 text-lg font-semibold text-center">
+                {watch.title}
+              </h3>
+              <p className="mt-1 text-sm text-gray-600 text-center line-clamp-2">
+                {watch.description}
+              </p>
               <p className="mt-2 font-bold text-[#D4AF37]">${watch.price}</p>
-              <button className="mt-3 px-4 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8860B] transition-colors text-sm font-medium">
-                Shop Now
-              </button>
+              <div className="mt-3 flex gap-2">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addToCart({
+                      _id: watch._id,
+                      title: watch.title,
+                      price: watch.price,
+                      imageUrl: watch.imageUrl
+                    });
+                  }}
+                  className="flex-1 px-3 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8860B] transition-colors text-sm font-medium"
+                >
+                  Add to Bag
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Navigate to product page
+                    window.location.href = `/product/${watch._id}`;
+                  }}
+                  className="px-3 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium text-center"
+                >
+                  View
+                </button>
+              </div>
             </div>
           </Link>
         ))}

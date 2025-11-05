@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import CheckoutForm from "@/components/CheckoutForm";
+import { useCart } from "@/lib/cart-context";
 
 
 interface Product {
@@ -21,12 +22,13 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [showCheckout, setShowCheckout] = useState(false);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     async function fetchProduct() {
       try {
        
-        const collections = ['NewArrival', 'forgifts', 'bestsellers', 'bracelet', 'earring', 'necklace', 'nosering', 'ring', 'watch'];
+        const collections = ['NewArrival', 'forgifts', 'bestsellers', 'bracelet', 'earring', 'necklace', 'nosering', 'ring', 'watch', 'engagement'];
 
         for (const collection of collections) {
           try {
@@ -105,10 +107,23 @@ export default function ProductPage() {
               <p className="text-sm text-gray-500 mb-8">Category: <span className="font-medium">{product.category}</span></p>
 
               <button
+                onClick={() => {
+                  addToCart({
+                    _id: product._id,
+                    title: product.title,
+                    price: product.price,
+                    imageUrl: product.imageUrl
+                  });
+                }}
+                className="w-full bg-[#D4AF37] text-white py-4 px-6 rounded-lg hover:bg-[#B8860B] transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-4"
+              >
+                Add to Bag
+              </button>
+              <button
                 onClick={() => setShowCheckout(true)}
                 className="w-full bg-[#00a0b0] text-white py-4 px-6 rounded-lg hover:bg-[#008a9e] transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
-                Add to Cart
+                Buy Now
               </button>
             </div>
           </div>

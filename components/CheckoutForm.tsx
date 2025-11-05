@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useCart } from "@/lib/cart-context";
 
 interface CheckoutFormProps {
   product: {
@@ -26,6 +27,7 @@ export default function CheckoutForm({ product, onClose }: CheckoutFormProps) {
     cardName: "",
   });
   const [loading, setLoading] = useState(false);
+  const { clearCart } = useCart();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -44,6 +46,9 @@ export default function CheckoutForm({ product, onClose }: CheckoutFormProps) {
 
       console.log("Confirmation email sent to:", formData.email);
       console.log("Email content: Thank you for your purchase! Your order will be delivered within 3-5 business days.");
+
+      // Clear cart after successful purchase
+      clearCart();
 
       onClose();
     } catch (error) {

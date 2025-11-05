@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useCart } from "@/lib/cart-context";
 
 interface Nosering {
   _id: string;
@@ -18,6 +19,7 @@ interface Nosering {
 export default function NoseringPage() {
   const [noserings, setNoserings] = useState<Nosering[]>([]);
   const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchNoserings = async () => {
@@ -60,19 +62,44 @@ export default function NoseringPage() {
           >
             <div className="flex flex-col items-center p-4 h-full">
               <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                <Image
-                  src={nosering.imageUrl}
-                  alt={nosering.title || "Product image"}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-500"
-                />
+                {nosering.imageUrl && (
+                  <Image
+                    src={nosering.imageUrl}
+                    alt={nosering.title || "Product image"}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                )}
               </div>
               <h3 className="mt-2 text-lg font-semibold text-center">{nosering.title}</h3>
               <p className="mt-1 text-sm text-gray-600 text-center line-clamp-2">{nosering.description}</p>
               <p className="mt-2 font-bold text-[#D4AF37]">${nosering.price}</p>
-              <button className="mt-3 px-4 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8860B] transition-colors text-sm font-medium">
-                Shop Now
-              </button>
+              <div className="mt-3 flex gap-2">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addToCart({
+                      _id: nosering._id,
+                      title: nosering.title,
+                      price: nosering.price,
+                      imageUrl: nosering.imageUrl
+                    });
+                  }}
+                  className="flex-1 px-3 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8860B] transition-colors text-sm font-medium"
+                >
+                  Add to Bag
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Navigate to product page
+                    window.location.href = `/product/${nosering._id}`;
+                  }}
+                  className="px-3 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium text-center"
+                >
+                  View
+                </button>
+              </div>
             </div>
           </Link>
         ))}

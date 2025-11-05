@@ -5,18 +5,18 @@ import { usePathname } from "next/navigation";
 import { User, Menu, X, ShoppingBag } from "lucide-react";
 import CategoryMenu from "@/components/CategoryMenu";
 import { useState } from "react";
+import { useCart } from "@/lib/cart-context";
+import { useSession, signOut } from "next-auth/react";
 
-interface NavbarProps {
-  isLoggedIn: boolean;
-  role: "admin" | "customer" | null;
-  onLogout: () => void;
-}
-
-export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
   const pathname = usePathname();
   const isHomePage = pathname === "/";
+  const { getItemCount } = useCart();
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
+  const role = (session?.user as { role: string })?.role as "admin" | "customer" | null;
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -25,10 +25,14 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
     { name: "Contact", href: "/contact" },
   ];
 
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 border-b backdrop-blur-2xl transition-all duration-500 border-white/20 ${isHomePage ? 'bg-white/10' : 'bg-[#00a0b0]/90'}`}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-20">
-       
+
         <Link
           href="/"
           className="text-2xl font-light tracking-[0.25em] text-white drop-shadow-[0_0_8px_rgba(212,175,55,0.25)]"
@@ -36,7 +40,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
           CHARLOTTE<span className="text-[#0096a6]">•</span>FACET
         </Link>
 
-      
+
         <div className="hidden md:flex items-center space-x-12">
           {navLinks.map((link) => (
             link.name === "Collections" ? (
@@ -54,7 +58,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                   <span className="absolute left-0 -bottom-1 w-0 bg-[#00a0b0] group-hover:w-full transition-all duration-500 "></span>
                 </Link>
 
-               
+
                 {isCollectionsOpen && (
                   <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 py-6 px-6 z-50">
                     <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">Shop by Category</h3>
@@ -124,7 +128,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                 className="flex items-center gap-2 text-white/80 hover:text-[#D4AF37] transition"
               >
                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                  U
+                  {session.user?.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
                 <span className="text-sm tracking-wider uppercase">Profile</span>
               </Link>
@@ -137,7 +141,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                 </Link>
               )}
               <button
-                onClick={onLogout}
+                onClick={handleLogout}
                 className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
               >
                 Logout
@@ -153,24 +157,29 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                 <span className="text-sm tracking-wider uppercase">Sign In</span>
               </Link>
 
-              {/* Shopping Bag Icon */}
+             
               <Link
                 href="/cart"
-                className="text-white hover:text-[#D4AF37] transition"
+                className="relative text-white hover:text-[#D4AF37] transition"
               >
                 <ShoppingBag size={20} />
+                {getItemCount() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {getItemCount()}
+                  </span>
+                )}
               </Link>
             </div>
           )}
         </div>
 
-        {/* Mobile Menu Button */}
+        
         <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
+    
       {isOpen && (
         <div className="md:hidden backdrop-blur-xl border-t border-white/20 bg-[#003c5a]/80">
           <div className="flex flex-col items-center space-y-5 py-6 text-white">
@@ -194,7 +203,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                   className="flex items-center gap-2 text-white/80 hover:text-[#D4AF37]"
                 >
                   <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                    U
+                    {session.user?.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <span className="text-sm uppercase">Profile</span>
                 </Link>
@@ -207,7 +216,7 @@ export default function Navbar({ isLoggedIn, role, onLogout }: NavbarProps) {
                   </Link>
                 )}
                 <button
-                  onClick={onLogout}
+                  onClick={handleLogout}
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
                 >
                   Logout

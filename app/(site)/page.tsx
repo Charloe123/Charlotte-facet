@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Navbar from "@/components/Navbar";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import NewArrival from "@/components/NewArrival";
 import ForGifts from "@/components/ForGifts";
 import Engagement from "@/components/Engagement";
@@ -10,41 +10,22 @@ import BestSellers from "@/components/BestSellers";
 import Newsletter from "@/components/Newsletter";
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userRole, setUserRole] = useState<"admin" | "customer" | null>(null);
+  const router = useRouter();
+  const { status } = useSession();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        setUserRole(payload.role);
-
-        // Only redirect admin if they're not already on the admin dashboard
-        if (payload.role === "admin" && !window.location.pathname.startsWith("/admin")) {
-          window.location.href = "/admin/dashboard";
-        }
-      } catch (error) {
-        console.error("Error decoding token:", error);
-      }
+  const handleShopNow = () => {
+    if (status === "unauthenticated") {
+      sessionStorage.setItem("intendedPath", "/shop");
+      router.push("/signIn");
+    } else {
+      router.push("/shop");
     }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    setUserRole(null);
-    window.location.reload();
   };
 
   return (
     <>
-   
-      <Navbar isLoggedIn={isLoggedIn} role={userRole} onLogout={handleLogout} />
 
-   
+
       <section className="relative w-full h-screen overflow-hidden">
       
         <motion.video
@@ -93,8 +74,8 @@ export default function Home() {
           </motion.p>
 
         
-          <motion.a
-            href="/shop"
+          <motion.button
+            onClick={handleShopNow}
             className="relative mt-8 px-8 py-3 border border-white/70 text-white hover:bg-[#0ABAB5] hover:border-[#0ABAB5] transition-all duration-300 rounded-full tracking-wide overflow-hidden"
           >
             Shop Now
@@ -108,7 +89,7 @@ export default function Home() {
               animate={{ x: "100%" }}
               transition={{ repeat: Infinity, duration: 2.5, ease: "linear" }}
             />
-          </motion.a>
+          </motion.button>
         </div>
       </section>
 

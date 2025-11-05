@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connect from "@/db";
 import User from "@/models/User";
-import { hashPassword, generateToken } from "@/lib/auth";
+import { hashPassword } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +15,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
@@ -24,14 +23,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-
     const validRoles = ["customer", "admin"];
     const adminEmail = process.env.ADMIN_EMAIL;
     const userRole = email === adminEmail ? "admin" : (role && validRoles.includes(role) ? role : "customer");
 
-
     const hashedPassword = await hashPassword(password);
-
 
     const user = new User({
       name,
@@ -42,14 +38,6 @@ export async function POST(req: NextRequest) {
 
     await user.save();
 
-
-    const token = generateToken({
-      id: user._id.toString(),
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    });
-
     return NextResponse.json({
       success: true,
       data: {
@@ -59,7 +47,6 @@ export async function POST(req: NextRequest) {
           email: user.email,
           role: user.role,
         },
-        token,
       },
     });
   } catch (error) {

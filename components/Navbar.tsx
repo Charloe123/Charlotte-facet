@@ -181,8 +181,8 @@ export default function Navbar() {
 
     
       {isOpen && (
-        <div className="md:hidden backdrop-blur-xl border-t border-white/20 bg-[#003c5a]/80">
-          <div className="flex flex-col items-center space-y-5 py-6 text-white">
+        <div className="md:hidden backdrop-blur-xl border-t border-gray-200 bg-white">
+          <div className="flex flex-col items-center space-y-5 py-6 text-gray-900">
             {navLinks.map((link) => (
               <Link
                 key={link.name}

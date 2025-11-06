@@ -96,7 +96,7 @@ export default function ShopPage() {
 
   return (
     <main className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-8 text-center uppercase mt-20 text-white tracking-wide">
+      <h1 className="text-3xl font-bold mb-8 text-center uppercase mt-20 text-gray-900 tracking-wide">
         All Products
       </h1>
 

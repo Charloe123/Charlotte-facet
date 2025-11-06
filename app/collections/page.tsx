@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+
 
 export default function CollectionsPage() {
   const collections = [
@@ -60,22 +60,15 @@ export default function CollectionsPage() {
             <Link
               key={collection.name}
               href={collection.href}
-              className="group bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              className="group bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-center"
             >
-              <div className="relative h-64 overflow-hidden">
-                <Image
-                  src={collection.image}
-                  alt={collection.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+              <div className="w-16 h-16 bg-[#D4AF37] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#B8860B] transition-colors">
+                <span className="text-white font-bold text-xl">{collection.name.charAt(0)}</span>
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-[#D4AF37] transition-colors">
-                  {collection.name}
-                </h3>
-                <p className="text-gray-600">{collection.description}</p>
-              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-[#D4AF37] transition-colors">
+                {collection.name}
+              </h3>
+              <p className="text-gray-600">{collection.description}</p>
             </Link>
           ))}
         </div>

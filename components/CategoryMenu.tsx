@@ -29,7 +29,7 @@ export default function CategoryMenu() {
           e.preventDefault();
           setOpen(!open);
         }}
-        className="flex items-center gap-1 text-white/80 hover:text-[#D4AF37] uppercase tracking-widest transition-all"
+        className="flex items-center gap-1 text-gray-900 hover:text-[#D4AF37] uppercase tracking-widest transition-all"
       >
         Collections
         <ChevronDown
@@ -40,7 +40,7 @@ export default function CategoryMenu() {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute mt-2 bg-white/95 backdrop-blur-md rounded-lg shadow-lg py-2 min-w-[180px] z-50 border border-gray-100">
+        <div className="mt-2 bg-white/95 backdrop-blur-md rounded-lg shadow-lg py-2 min-w-[180px] border border-gray-100">
           {categories.map((cat) => (
             <Link
               key={cat.name}

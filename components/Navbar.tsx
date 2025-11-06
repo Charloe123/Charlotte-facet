@@ -35,7 +35,7 @@ export default function Navbar() {
 
         <Link
           href="/"
-          className="text-2xl font-light tracking-[0.25em] text-white drop-shadow-[0_0_8px_rgba(212,175,55,0.25)]"
+          className="text-xs md:text-2xl font-light tracking-[0.25em] text-white drop-shadow-[0_0_8px_rgba(212,175,55,0.25)]"
         >
           CHARLOTTE<span className="text-[#0096a6]">•</span>FACET
         </Link>

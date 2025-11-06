@@ -25,6 +25,10 @@ export default function CategoryMenu() {
       {/* Main link */}
       <Link
         href="/collections"
+        onClick={(e) => {
+          e.preventDefault();
+          setOpen(!open);
+        }}
         className="flex items-center gap-1 text-white/80 hover:text-[#D4AF37] uppercase tracking-widest transition-all"
       >
         Collections

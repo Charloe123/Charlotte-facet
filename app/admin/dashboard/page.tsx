@@ -48,12 +48,33 @@ interface Order {
   updatedAt: string;
 }
 
+interface SellerApplication {
+  _id?: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  businessName: string;
+  businessDescription: string;
+  website: string;
+  address: string;
+  city: string;
+  country: string;
+  experience: string;
+  productCategories: string[];
+  termsAccepted: boolean;
+  status: "pending" | "approved" | "rejected";
+  submittedAt: string;
+}
+
 export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [sellerApplications, setSellerApplications] = useState<SellerApplication[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"users" | "products" | "orders">("users");
+  const [activeTab, setActiveTab] = useState<"users" | "products" | "orders" | "seller-applications">("users");
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -73,6 +94,13 @@ export default function AdminDashboard() {
       const headers = {
         "Content-Type": "application/json",
       };
+
+      // Fetch seller applications from API
+      const applicationsRes = await fetch("/api/seller-applications", { headers });
+      if (applicationsRes.ok) {
+        const applicationsData = await applicationsRes.json();
+        setSellerApplications(applicationsData.data || []);
+      }
 
       const [usersRes, productsRes, ordersRes] = await Promise.all([
         fetch("/api/admin/users", { headers }),
@@ -184,8 +212,74 @@ export default function AdminDashboard() {
   };
 
   const handleViewOrderDetails = (order: Order) => {
-   
+
     alert(`Order Details:\nCustomer: ${order.userId.name}\nItems: ${order.items.length}\nTotal: $${order.total}\nStatus: ${order.status}`);
+  };
+
+  const handleApproveSeller = async (applicationId: string) => {
+    try {
+      const response = await fetch(`/api/seller-applications?id=${applicationId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: 'approved',
+          approvedBy: 'admin', // In real app, this would be the current admin user ID
+        }),
+      });
+
+      if (response.ok) {
+        // Update local state
+        setSellerApplications(applications =>
+          applications.map(app =>
+            app.id === applicationId ? { ...app, status: "approved" as const } : app
+          )
+        );
+        alert("Seller application approved successfully! The seller can now access their dashboard.");
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to approve application: ${errorData.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error approving seller:', error);
+      alert('Error approving seller application');
+    }
+  };
+
+  const handleRejectSeller = async (applicationId: string, reason?: string) => {
+    try {
+      const response = await fetch(`/api/seller-applications?id=${applicationId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: 'rejected',
+          rejectionReason: reason || 'Application does not meet our requirements',
+        }),
+      });
+
+      if (response.ok) {
+        // Update local state
+        setSellerApplications(applications =>
+          applications.map(app =>
+            app.id === applicationId ? { ...app, status: "rejected" as const } : app
+          )
+        );
+        alert("Seller application rejected.");
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to reject application: ${errorData.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error rejecting seller:', error);
+      alert('Error rejecting seller application');
+    }
+  };
+
+  const handleViewSellerApplication = (application: SellerApplication) => {
+    alert(`Application Details:\nName: ${application.firstName} ${application.lastName}\nBusiness: ${application.businessName}\nEmail: ${application.email}\nCategories: ${application.productCategories.join(", ")}\nExperience: ${application.experience} years`);
   };
 
   if (loading) {
@@ -235,6 +329,16 @@ export default function AdminDashboard() {
                 }`}
               >
                 Orders ({orders.length})
+              </button>
+              <button
+                onClick={() => setActiveTab("seller-applications")}
+                className={`px-3 py-2 rounded-md font-medium text-sm ${
+                  activeTab === "seller-applications"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
+              >
+                Seller Applications ({sellerApplications.filter(app => app.status === "pending").length})
               </button>
             </div>
 
@@ -408,6 +512,92 @@ export default function AdminDashboard() {
                             >
                               View
                             </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "seller-applications" && (
+              <div>
+                <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-6">Seller Applications</h2>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full bg-white border border-gray-300">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Applicant
+                        </th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Business
+                        </th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                          Categories
+                        </th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                          Submitted
+                        </th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {sellerApplications.map((application) => (
+                        <tr key={application._id?.toString() || application.id}>
+                          <td className="px-2 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm font-medium text-gray-900">
+                            <div>
+                              <div className="font-medium">{application.firstName} {application.lastName}</div>
+                              <div className="text-xs text-gray-500">{application.email}</div>
+                            </div>
+                          </td>
+                          <td className="px-2 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm text-gray-500">
+                            {application.businessName}
+                          </td>
+                          <td className="px-2 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm text-gray-500 hidden md:table-cell">
+                            {application.productCategories.join(", ")}
+                          </td>
+                          <td className="px-2 md:px-6 py-4 whitespace-nowrap">
+                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                              application.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                              application.status === 'approved' ? 'bg-green-100 text-green-800' :
+                              'bg-red-100 text-red-800'
+                            }`}>
+                              {application.status}
+                            </span>
+                          </td>
+                          <td className="px-2 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm text-gray-500 hidden lg:table-cell">
+                            {new Date(application.submittedAt).toLocaleDateString()}
+                          </td>
+                          <td className="px-2 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm font-medium">
+                            <button
+                              className="text-blue-600 hover:text-blue-900 mr-2 md:mr-4"
+                              onClick={() => handleViewSellerApplication(application)}
+                            >
+                              View
+                            </button>
+                            {application.status === 'pending' && (
+                              <>
+                                <button
+                                  className="text-green-600 hover:text-green-900 mr-2 md:mr-4"
+                                  onClick={() => handleApproveSeller(application._id?.toString() || application.id)}
+                                >
+                                  Approve
+                                </button>
+                                <button
+                                  className="text-red-600 hover:text-red-900"
+                                  onClick={() => handleRejectSeller(application._id?.toString() || application.id)}
+                                >
+                                  Reject
+                                </button>
+                              </>
+                            )}
                           </td>
                         </tr>
                       ))}

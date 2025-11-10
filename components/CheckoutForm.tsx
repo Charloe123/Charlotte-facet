@@ -13,7 +13,7 @@ interface CheckoutFormProps {
 }
 
 export default function CheckoutForm({ product, onClose }: CheckoutFormProps) {
-  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "paypal">("paypal");
+  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "paypal" | "bank" | "ecocash" | "innbucks">("paypal");
   const [formData, setFormData] = useState({
     email: "",
     address: "",
@@ -25,11 +25,15 @@ export default function CheckoutForm({ product, onClose }: CheckoutFormProps) {
     expiryDate: "",
     cvv: "",
     cardName: "",
+    bankName: "",
+    accountNumber: "",
+    ecocashNumber: "",
+    innbucksNumber: "",
   });
   const [loading, setLoading] = useState(false);
   const { clearCart } = useCart();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -60,8 +64,8 @@ export default function CheckoutForm({ product, onClose }: CheckoutFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white p-6 rounded-xl shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto border border-gray-200">
+    <div className="fixed right-0 top-0 bottom-0 w-80 bg-white shadow-2xl z-50 p-4 overflow-y-auto border-l border-gray-200">
+      <div className="w-full">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Checkout</h2>
           <button
@@ -80,7 +84,7 @@ export default function CheckoutForm({ product, onClose }: CheckoutFormProps) {
        
         <div className="mb-6">
           <h4 className="text-lg font-medium text-gray-900 mb-3">Payment Method</h4>
-          <div className="flex gap-4">
+          <div className="space-y-2">
             <label className="flex items-center">
               <input
                 type="radio"
@@ -102,6 +106,39 @@ export default function CheckoutForm({ product, onClose }: CheckoutFormProps) {
                 className="mr-2"
               />
               <span className="text-gray-700">Credit Card (Stripe)</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="bank"
+                checked={paymentMethod === "bank"}
+                onChange={(e) => setPaymentMethod(e.target.value as "bank")}
+                className="mr-2"
+              />
+              <span className="text-gray-700">Bank Transfer</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="ecocash"
+                checked={paymentMethod === "ecocash"}
+                onChange={(e) => setPaymentMethod(e.target.value as "ecocash")}
+                className="mr-2"
+              />
+              <span className="text-gray-700">EcoCash</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="innbucks"
+                checked={paymentMethod === "innbucks"}
+                onChange={(e) => setPaymentMethod(e.target.value as "innbucks")}
+                className="mr-2"
+              />
+              <span className="text-gray-700">InnBucks</span>
             </label>
           </div>
         </div>
@@ -261,6 +298,80 @@ export default function CheckoutForm({ product, onClose }: CheckoutFormProps) {
                 </div>
               </div>
             </>
+          )}
+
+          {paymentMethod === "bank" && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Bank Name
+                </label>
+                <select
+                  name="bankName"
+                  required={paymentMethod === "bank"}
+                  value={formData.bankName}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#0070ba] focus:border-[#0070ba]"
+                >
+                  <option value="">Select Bank</option>
+                  <option value="cbz">CBZ Bank</option>
+                  <option value="fnb">First National Bank (FNB)</option>
+                  <option value="stanbic">Stanbic Bank</option>
+                  <option value="zimbank">Zimbabwe Bank</option>
+                  <option value="nedbank">Nedbank Zimbabwe</option>
+                  <option value="ecobank">Ecobank Zimbabwe</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Account Number
+                </label>
+                <input
+                  type="text"
+                  name="accountNumber"
+                  required={paymentMethod === "bank"}
+                  value={formData.accountNumber}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#0070ba] focus:border-[#0070ba]"
+                  placeholder="Enter your account number"
+                />
+              </div>
+            </>
+          )}
+
+          {paymentMethod === "ecocash" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                EcoCash Number
+              </label>
+              <input
+                type="text"
+                name="ecocashNumber"
+                required={paymentMethod === "ecocash"}
+                value={formData.ecocashNumber}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#0070ba] focus:border-[#0070ba]"
+                placeholder="077 123 4567"
+              />
+            </div>
+          )}
+
+          {paymentMethod === "innbucks" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                InnBucks Number
+              </label>
+              <input
+                type="text"
+                name="innbucksNumber"
+                required={paymentMethod === "innbucks"}
+                value={formData.innbucksNumber}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#0070ba] focus:border-[#0070ba]"
+                placeholder="Enter your InnBucks number"
+              />
+            </div>
           )}
 
           <button

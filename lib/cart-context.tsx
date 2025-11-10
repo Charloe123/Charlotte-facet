@@ -2,6 +2,12 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+interface NotificationData {
+  message: string;
+  imageUrl: string;
+  show: boolean;
+}
+
 export interface CartItem {
   _id: string;
   title: string;
@@ -18,12 +24,15 @@ interface CartContextType {
   clearCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
+  notification: NotificationData | null;
+  hideNotification: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [notification, setNotification] = useState<NotificationData | null>(null);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -46,12 +55,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart(prevCart => {
       const existingItem = prevCart.find(cartItem => cartItem._id === item._id);
       if (existingItem) {
-        return prevCart.map(cartItem =>
+        const updatedCart = prevCart.map(cartItem =>
           cartItem._id === item._id
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         );
+        // Show notification for quantity increase
+        setNotification({
+          message: `Item quantity updated! ${item.title} quantity increased to ${existingItem.quantity + 1} in your cart.`,
+          imageUrl: item.imageUrl,
+          show: true,
+        });
+        // Auto-hide notification after 3 seconds
+        setTimeout(() => setNotification(null), 3000);
+        return updatedCart;
       } else {
+        // Show notification for new item
+        setNotification({
+          message: `Item added to cart! ${item.title} has been added to your cart.`,
+          imageUrl: item.imageUrl,
+          show: true,
+        });
+        // Auto-hide notification after 3 seconds
+        setTimeout(() => setNotification(null), 3000);
         return [...prevCart, { ...item, quantity: 1 }];
       }
     });
@@ -85,6 +111,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cart.reduce((count, item) => count + item.quantity, 0);
   };
 
+  const hideNotification = () => {
+    setNotification(null);
+  };
+
   return (
     <CartContext.Provider value={{
       cart,
@@ -94,6 +124,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clearCart,
       getTotal,
       getItemCount,
+      notification,
+      hideNotification,
     }}>
       {children}
     </CartContext.Provider>

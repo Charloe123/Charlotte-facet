@@ -5,6 +5,7 @@ import { SessionProvider } from "@/components/SessionProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/lib/cart-context";
+import CartNotification from "@/components/CartNotification";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
             <Navbar />
             {children}
             <Footer />
+            <CartNotification />
           </CartProvider>
         </SessionProvider>
       </body>
